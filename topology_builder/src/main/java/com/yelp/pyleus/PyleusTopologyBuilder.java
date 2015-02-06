@@ -42,8 +42,14 @@ public class PyleusTopologyBuilder {
     public static void handleBolt(final TopologyBuilder builder, final BoltSpec spec,
         final TopologySpec topologySpec) {
 
-        PythonBolt bolt = pyFactory.createPythonBolt(spec.module,
-                spec.options, topologySpec.logging_config, topologySpec.serializer);
+        PythonBolt bolt;
+        if (spec.type.equals("go")) {
+            bolt = pyFactory.createGoBolt(spec.module,
+                    spec.options, topologySpec.logging_config, topologySpec.serializer);
+        } else {
+            bolt = pyFactory.createPythonBolt(spec.module,
+                    spec.options, topologySpec.logging_config, topologySpec.serializer);
+        }
 
         if (spec.output_fields != null) {
             bolt.setOutputFields(spec.output_fields);
